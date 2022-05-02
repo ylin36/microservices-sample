@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mss-api
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: mss-api
+    template:
+        metadata: 
+            labels:
+                app: mss-api
+        spec:
+            containers:
+            - name: mss-api
+              imagePullPolicy: Always
+              ports:
+              - containerPort: 80
+                name: http
+              - containerPort: 443
+                name: https
+              image: ylin36/mss-api:1.0.0.1

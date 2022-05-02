@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mss-ingress
+  annotations:
+    # We are defining this annotation to prevent nginx
+    # from redirecting requests to `https` for now
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2 ## without this, path: /path will be passed to svc.
+spec:
+  ingressClassName: nginx ## optional for nginx
+  rules:
+    - host: mss.test
+      http:
+        paths:
+          - path: /test(/|$)(.*) ## use this with rewrite target to get rid of test from the path when sending rest to svc
+            pathType: Prefix
+            backend:
+              service:
+                name: mss-api-svc
+                port:
+                  number: 80
